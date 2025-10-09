@@ -1,0 +1,28 @@
+# Enable Python in Power BI: Go to File → Options and Settings → Options → Python scripting → Set the path to your Python installation
+
+# Run the Python Script: In Power BI, click Home → Power Query Editor → Transform → Run Python Script → Paste the following Python code 
+
+# My Python Script
+
+import pandas as pd
+from textblob import TextBlob
+
+# Load your dataset
+df = dataset  # 'dataset' is a special variable in Power BI that refers to the loaded data
+
+# Fill missing comments
+df['Comments'] = df['Comments'].fillna('')
+
+# Perform sentiment analysis
+df['Sentiment_Score'] = df['Comments'].apply(lambda x: TextBlob(x).sentiment.polarity)
+
+# Categorize sentiment
+def categorize(score):
+    if score > 0.1:
+        return 'Positive'
+    elif score < -0.1:
+        return 'Negative'
+    else:
+        return 'Neutral'
+
+df['Sentiment_Category'] = df['Sentiment_Score'].apply(categorize)
